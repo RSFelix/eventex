@@ -2,7 +2,7 @@ from django.test import TestCase
 
 
 class HomeTest(TestCase):
-    def SetUp(self):
+    def setUp(self):
         self.response = self.client.get('/')
 
     def test_get(self):
