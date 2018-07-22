@@ -2,6 +2,10 @@
 
 Sistema de Eventos encomendado pela Morena
 
+[![Build Status](https://travis-ci.org/RSFelix/eventex.svg?branch=master)](https://travis-ci.org/RSFelix/eventex)
+
+[![Code Health](https://landscape.io/github/RSFelix/eventex/master/landscape.svg?style=flat)](https://landscape.io/github/RSFelix/eventex/master)
+
 ## Como desenvolver?
 
 1. Clone o repositório.
