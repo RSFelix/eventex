@@ -17,11 +17,15 @@ class SubcribeTest(TestCase):
 
     def test_html(self):
         """HTML must contain input tags"""
-        self.assertContains(self.resp, '<form')
-        self.assertContains(self.resp, '<input', 6)
-        self.assertContains(self.resp, 'type="text"',3)
-        self.assertContains(self.resp, 'type="email"')
-        self.assertContains(self.resp, 'type="submit"')
+        tags = (('<form', 1),
+                ('<input', 6),
+                ('type="text"', 3),
+                ('type="email"', 1),
+                ('type="submit"', 1))
+
+        for text, count in tags:
+            with self.subTest():
+                self.assertContains(self.resp, text, count)
 
     def test_csrf(self):
         """HTML must contain csrf"""
@@ -31,12 +35,6 @@ class SubcribeTest(TestCase):
         """Context must have subscription form"""
         form = self.resp.context['form']
         self.assertIsInstance(form, SubscriptionForm)
-
-    def test_form_has_fields(self):
-        """Form must have 4 fields."""
-        form = self.resp.context['form']
-        self. assertSequenceEqual(['name', 'cpf', 'email', 'phone'], list(form.fields))
-
 
 class SubscribePostTest(TestCase):
     def setUp(self):
@@ -50,33 +48,6 @@ class SubscribePostTest(TestCase):
 
     def test_send_subscribe_email(self):
         self.assertEqual(1, len(mail.outbox))
-
-    def test_subscription_email(self):
-        email=mail.outbox[0]
-        expect = 'Confirmação de inscrição'
-
-        self.assertEqual(expect, email.subject)
-
-    def test_subscription_email_from(self):
-        email = mail.outbox[0]
-        expect = 'contato@eventex.com.br'
-
-        self.assertEqual(expect, email.from_email)
-
-    def test_subscription_email_to(self):
-        email = mail.outbox[0]
-        expect = ['contato@eventex.com.br', 'rogerio@felix.net']
-
-        self.assertEqual(expect, email.to)
-
-    def test_subscription_email_body(self):
-        email = mail.outbox[0]
-
-        self.assertIn('Rogerio Felix', email.body)
-        self.assertIn('12345678901', email.body)
-        self.assertIn('rogerio@felix.net', email.body)
-        self.assertIn('86-99818-1818', email.body)
-
 
 class SubscribleInvalidPost(TestCase):
     def setUp(self):
@@ -96,7 +67,6 @@ class SubscribleInvalidPost(TestCase):
     def test_form_has_errors(self):
         form = self.resp.context['form']
         self.assertTrue(form.errors)
-
 
 class SubscribleSuccsessMenseger(TestCase):
     def test_message(self):
